@@ -20,7 +20,7 @@ class PostFactory extends Factory
             'title'=>$this->faker->name(),
             'description'=>$this->faker->text(),
             'preview'=>$this->faker->text(50),
-            'prev_image'=>$this->faker->image('public/storage/posts',400,400,null,false)
+            'prev_image'=>$this->faker->image('public/storage/posts',640,480,null,false)
         ];
     }
 }

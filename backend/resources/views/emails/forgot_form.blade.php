@@ -1,0 +1,2 @@
+<p>Pass {{$password}}<p>
+
