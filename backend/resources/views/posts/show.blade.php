@@ -6,7 +6,7 @@
         <div class="m-auto px-4 py-8 max-w-xl">
             <div class="bg-white shadow-2xl" >
                 <div>
-                    <img src="{{asset('storage/posts/'.$post->prev_image)}}">
+                    <img class="w-64" src="{{'/storage/'.$post->prev_image}}">
                 </div>
                 <div class="px-4 py-2 mt-2 bg-white">
                     <h2 class="font-bold text-2xl text-gray-800">{{$post->title}}</h2>

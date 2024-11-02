@@ -12,7 +12,10 @@ class PostController extends Controller
 {
     public function index(): View
     {
-        $posts = Post::query()->orderBy('created_at', 'DESC')->paginate(3);
+        $posts = Post::query()
+            ->orderBy('created_at', 'DESC')
+            ->get();
+         //   ->paginate(1);
 
         return view('posts.index', compact('posts'));
     }
