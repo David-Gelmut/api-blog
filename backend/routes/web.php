@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('home');
 
 Route::get('/posts', [\App\Http\Controllers\PostController::class, 'index'])->name('posts.index');
+Route::post('/posts', [\App\Http\Controllers\PostController::class, 'store'])->name('posts.store');
+Route::get('/posts/create', [\App\Http\Controllers\PostController::class, 'create'])->name('posts.create');
 Route::get('/posts/{id}', [\App\Http\Controllers\PostController::class, 'show'])->name('posts.show');
+
 
 Route::get('/contacts', [\App\Http\Controllers\ContactController::class, 'showContactForm'])->name('contacts');
 Route::post('/contacts_process', [\App\Http\Controllers\ContactController::class, 'contact'])->name('contacts_process');
