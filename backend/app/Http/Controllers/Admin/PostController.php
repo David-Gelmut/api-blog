@@ -38,6 +38,9 @@ class PostController extends Controller
             $prevPath = $request->file('prev_image')->store('posts', 'public');
             $data['prev_image'] = $prevPath;
         }
+
+        $data['user_id'] = auth()->user()->id;
+
         $post = Post::create($data);
 
         return redirect(route('admin.posts.index'));
