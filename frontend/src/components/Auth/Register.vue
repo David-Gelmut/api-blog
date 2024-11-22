@@ -40,7 +40,7 @@ export default {
             }
         ).then(res => {
           console.log(res);
-
+          this.cookies.set("status",'authorization');
         }).catch(err => {
           console.log(err.message);
         })

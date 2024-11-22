@@ -19,7 +19,7 @@ export default {
     return {
       email: null,
       password: null,
-      token: null
+      status: null
     }
   },
   methods: {
@@ -37,6 +37,7 @@ export default {
               }
           ).then(res => {
             console.log(res);
+            this.cookies.set("status",'authorization');
 
           }).catch(err => {
             console.log(err.message);
