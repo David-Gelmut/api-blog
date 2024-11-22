@@ -61,23 +61,27 @@ export default {
   },
   methods: {
     getPosts() {
-      axios.get('http://localhost:8080/api/posts', {
+
+      axios.get('http://localhost:8080/api/posts', /*{
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer aaKJKIKkkk99009kk)la34355ddfw341pjiju'
         }
-      }).then(data => {
+      }*/).then(data => {
             //console.log(data.data);
             this.posts = data.data.data
           })
+
     },
     deletePost(id) {
-      axios.delete(`http://localhost:8080/api/posts/${id}`, {
+      axios.delete(`http://localhost:8080/api/posts/${id}`,
+        /*  {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer aaKJKIKkkk99009kk)la34355ddfw341pjiju'
         }
-      }).then(data => {
+      }*/
+      ).then(data => {
             this.getPosts()
           })
     },

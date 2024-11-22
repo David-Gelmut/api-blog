@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import Index from "@/components/Post/Index.vue";
 import Edit from "@/components/Post/Edit.vue";
 import Show from "@/components/Post/Show.vue";
 import Create from "@/components/Post/Create.vue";
+import Login from "@/components/Auth/Login.vue";
 
 
 const router = createRouter({
@@ -28,6 +30,12 @@ const router = createRouter({
       path: '/show/:id',
       name: 'show',
       component: Show
+
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
 
     }
   ]
