@@ -13,6 +13,9 @@ import {RouterLink, RouterView} from 'vue-router'
       <div class="hover:bg-blue-300 p-2 rounded-md">
         <router-link :to="{name:'login'}">Login</router-link>
       </div>
+      <div class="hover:bg-blue-300 p-2 rounded-md">
+        <router-link :to="{name:'register'}">Register</router-link>
+      </div>
     </nav>
     <router-view></router-view>
   </div>

@@ -43,10 +43,15 @@
 import axios from "axios";
 import {RouterLink} from "vue-router";
 import router from "@/router/index.js";
+import {useCookies} from "vue3-cookies";
 
 export default {
 
   name: "Show",
+  setup() {
+    const {cookies} = useCookies();
+    return {cookies};
+  },
   data() {
     return {
       post: null
@@ -58,9 +63,9 @@ export default {
   methods: {
     getPost() {
       axios.get(`http://localhost:8080/api/posts/${this.$route.params.id}`,{
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': 'Bearer aaKJKIKkkk99009kk)la34355ddfw341pjiju'
+        withCredentials: true,
+        headers :{
+          'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
         }
       })
           .then(data => {
@@ -70,9 +75,9 @@ export default {
     },
     deletePost(id) {
        axios.delete(`http://localhost:8080/api/posts/${id}`,{
-         headers: {
-           'Content-Type': 'multipart/form-data',
-           'Authorization': 'Bearer aaKJKIKkkk99009kk)la34355ddfw341pjiju'
+         withCredentials: true,
+         headers :{
+           'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
          }
        })
           .then(data => {

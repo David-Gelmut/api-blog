@@ -9,10 +9,10 @@
           <input v-model="title" type="text" class="w-full h-12 border border-gray-800  rounded px-3"
                  placeholder="Название"/>
           <p v-if="!preview" class="text-red-500">Обязательное поле</p>
-          <input  v-model="preview" type="text" class="w-full h-12 border border-gray-800  rounded px-3"
+          <input v-model="preview" type="text" class="w-full h-12 border border-gray-800  rounded px-3"
                  placeholder="Превью"/>
           <p v-if="!description" class="text-red-500">Обязательное поле</p>
-          <input  v-model="description" type="text" class="w-full h-12 border border-gray-800  rounded px-3"
+          <input v-model="description" type="text" class="w-full h-12 border border-gray-800  rounded px-3"
                  placeholder="Описание"/>
           <input type="file" id="file" ref="prev_image" v-on:change="handleFileUpload()" class="w-full h-12"
                  placeholder="Изображение"/>
@@ -27,9 +27,16 @@
 <script>
 import axios from "axios";
 import router from "@/router/index.js";
+import {useCookies} from "vue3-cookies";
+
 export default {
 
   name: "Create",
+  setup() {
+    const {cookies} = useCookies();
+    return {cookies};
+  },
+
   data() {
     return {
       title: null,
@@ -46,18 +53,18 @@ export default {
       formData.append('title', this.title);
       formData.append('preview', this.preview,);
       formData.append('description', this.description);
-      if(this.prev_image)
+      if (this.prev_image)
         formData.append('prev_image', this.prev_image);
       axios.post('http://localhost:8080/api/posts',
           formData,
           {
+            withCredentials: true,
             headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization':'Bearer aaKJKIKkkk99009kk)la34355ddfw341pjiju'
+              'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
             }
           }
       ).then(data => {
-        this.$router.push({name:'home'})
+        this.$router.push({name: 'home'})
       })
     },
     handleFileUpload() {
@@ -65,9 +72,9 @@ export default {
     },
 
   },
-  computed :{
-    isDisabled(){
-      return this.title&&this.preview&&this.description;
+  computed: {
+    isDisabled() {
+      return this.title && this.preview && this.description;
     }
   }
 }

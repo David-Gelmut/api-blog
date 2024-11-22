@@ -2,7 +2,7 @@
   <div>
     <div>
       <div class="container mx-auto px-6 py-8">
-        <h3 class="text-gray-700 text-3xl font-medium">Обновить статью c ID :{{this.$route.params.id}}</h3>
+        <h3 class="text-gray-700 text-3xl font-medium">Обновить статью c ID :{{ this.$route.params.id }}</h3>
         <div class="mt-8"></div>
         <div class="mt-8">
           <div class="space-y-5 mt-5">
@@ -30,10 +30,15 @@
 <script>
 import axios from "axios";
 import router from "@/router/index.js";
+import {useCookies} from "vue3-cookies";
 
 export default {
 
   name: "Edit",
+  setup() {
+    const {cookies} = useCookies();
+    return {cookies};
+  },
   data() {
     return {
       title: null,
@@ -47,10 +52,10 @@ export default {
   },
   methods: {
     getPost() {
-      axios.get(`http://localhost:8080/api/posts/${this.$route.params.id}`,{
+      axios.get(`http://localhost:8080/api/posts/${this.$route.params.id}`, {
+            withCredentials: true,
             headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': 'Bearer aaKJKIKkkk99009kk)la34355ddfw341pjiju'
+              'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
             }
           }
       ).then(data => {
@@ -71,29 +76,30 @@ export default {
         formData.append('prev_image', this.prev_image);*/
 
       axios.patch(`http://localhost:8080/api/posts/${this.$route.params.id}`,
-         // formData
+          // formData
           {
-            title:this.title,
-            preview:this.preview,
-            description:this.description,
-       //     prev_image:this.prev_image,
+            title: this.title,
+            preview: this.preview,
+            description: this.description,
+            //     prev_image:this.prev_image,
           },
           {
-         //   headers: {
-           //   'Content-Type': 'multipart/form-data'
-          //  }
+            withCredentials: true,
+            headers: {
+              'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
+            }
           }).then(data => {
-            console.log(data);
-        this.$router.push({name: 'show',params:{id:this.$route.params.id}})
+        console.log(data);
+        this.$router.push({name: 'show', params: {id: this.$route.params.id}})
       })
     },
     handleFileUpload() {
       this.prev_image = this.$refs.prev_image.files[0];
     }
   },
-  computed :{
-    isDisabled(){
-      return this.title&&this.preview&&this.description;
+  computed: {
+    isDisabled() {
+      return this.title && this.preview && this.description;
     }
   }
 }

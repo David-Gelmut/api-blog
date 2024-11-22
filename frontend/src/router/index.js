@@ -5,6 +5,7 @@ import Edit from "@/components/Post/Edit.vue";
 import Show from "@/components/Post/Show.vue";
 import Create from "@/components/Post/Create.vue";
 import Login from "@/components/Auth/Login.vue";
+import Register from "@/components/Auth/Register.vue";
 
 
 const router = createRouter({
@@ -36,6 +37,12 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
 
     }
   ]

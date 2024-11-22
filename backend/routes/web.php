@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+
 Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('home');
 
 Route::get('/posts', [\App\Http\Controllers\PostController::class, 'index'])->name('posts.index');

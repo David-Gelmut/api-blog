@@ -45,11 +45,15 @@
 <script>
 import axios from "axios";
 //import {RouterLink} from "vue-router";
-
+import {useCookies} from "vue3-cookies";
 export default {
   name: "Index",
   components: {
     // RouterLink,
+  },
+  setup() {
+    const {cookies} = useCookies();
+    return {cookies};
   },
   data() {
     return {
@@ -62,12 +66,12 @@ export default {
   methods: {
     getPosts() {
 
-      axios.get('http://localhost:8080/api/posts', /*{
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': 'Bearer aaKJKIKkkk99009kk)la34355ddfw341pjiju'
+      axios.get('http://localhost:8080/api/posts', {
+        withCredentials: true,
+        headers :{
+          'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
         }
-      }*/).then(data => {
+      }).then(data => {
             //console.log(data.data);
             this.posts = data.data.data
           })
@@ -75,12 +79,12 @@ export default {
     },
     deletePost(id) {
       axios.delete(`http://localhost:8080/api/posts/${id}`,
-        /*  {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': 'Bearer aaKJKIKkkk99009kk)la34355ddfw341pjiju'
-        }
-      }*/
+          {
+            withCredentials: true,
+            headers :{
+              'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
+            }
+          }
       ).then(data => {
             this.getPosts()
           })
