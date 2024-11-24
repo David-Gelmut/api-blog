@@ -1,18 +1,15 @@
 <template>
   <div class="h-screen bg-white flex flex-col space-y-10 justify-center items-center">
     <div class="bg-white w-96 shadow-xl rounded p-5">
-      <h1 class="text-3xl font-medium">Регистрация</h1>
+      <h1 class="text-3xl font-medium">Восстановление пароля</h1>
       <form class="space-y-5 mt-5">
-        <input v-model="name" type="text" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Email" />
-        <input v-model="email" type="text" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Email" />
-        <input v-model="password" type="password" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Пароль" />
-        <input @click.prevent="register"  type="password" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Подтверждение пароля" />
+        <input v-model="email" type="text" class="w-full h-12 border border-red-500 rounded px-3" placeholder="Email" />
         <div>
           <router-link :to="{name:'login'}">
-            <a href="#" class="font-medium text-blue-900 hover:bg-blue-300 rounded-md p-2">Есть аккаунт?</a>
+            <a href="#" class="font-medium text-blue-900 hover:bg-blue-300 rounded-md p-2">Вспомнил пароль</a>
           </router-link>
         </div>
-        <button type="submit" class="text-center w-full bg-blue-900 rounded-md text-white py-3 font-medium">Зарегистрироваться</button>
+        <button  @click.prevent="forgot" type="submit" class="text-center w-full bg-blue-900 rounded-md text-white py-3 font-medium">Восстановить</button>
       </form>
     </div>
   </div>
@@ -22,7 +19,7 @@ import axios from "axios";
 import {useCookies} from "vue3-cookies";
 
 export default {
-  name: "Register",
+  name: "Forgot",
   setup() {
     const {cookies} = useCookies();
     return {cookies};
@@ -30,19 +27,16 @@ export default {
   data() {
     return {
       email: null,
-      password: null,
-      name: null
     }
   },
   methods: {
-    register() {
+    forgot() {
       axios.get('http://localhost:8080/sanctum/csrf-cookie', {
         withCredentials: true,
       }).then(response => {
-        axios.post('http://localhost:8080/api/register', {
+        axios.post('http://localhost:8080/api/forgot', {
               email: this.email,
-              password: this.password,
-              name: this.name
+
             }, {
               withCredentials: true,
               headers: {

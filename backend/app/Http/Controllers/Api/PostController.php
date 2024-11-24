@@ -11,17 +11,21 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use SebastianBergmann\CodeCoverage\Util\Percentage;
 
 class PostController extends Controller
 {
-    public function index():AnonymousResourceCollection
+    public function index()
     {
         $posts = Post::query()
             ->orderBy('created_at', 'DESC')
             ->get();
-        return PostResource::collection($posts);
+        return response()->json([
+            'user_id'=>auth()->user()->id,
+            'posts'=>  PostResource::collection($posts)
+            ]);
     }
 
     public function show(Post $post):PostResource
@@ -44,12 +48,10 @@ class PostController extends Controller
             $prevPath = $request->file('prev_image')->store('posts', 'public');
             $data['prev_image'] = $prevPath;
         }
-       // $data['prev_image'] = 'test/path/image.jpg';
-        //$data['user_id'] = auth()->user()->id;
-        $data['user_id'] =1;
+        $data['user_id'] =auth()->user()->id;
         Post::create($data);
 
-        return response([]);
+        return response($data);
     }
 
     public function update(\App\Http\Requests\Api\PostFormEditRequest $request,Post $post)

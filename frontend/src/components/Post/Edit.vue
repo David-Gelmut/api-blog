@@ -53,9 +53,10 @@ export default {
   methods: {
     getPost() {
       axios.get(`http://localhost:8080/api/posts/${this.$route.params.id}`, {
-            withCredentials: true,
+          //  withCredentials: true,
             headers: {
-              'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
+              'Authorization':'Bearer '+localStorage.getItem('my_token')
+          //    'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
             }
           }
       ).then(data => {
@@ -86,6 +87,7 @@ export default {
           {
             withCredentials: true,
             headers: {
+              //'Authorization':'Bearer '+localStorage.getItem('my_token')
               'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
             }
           }).then(data => {

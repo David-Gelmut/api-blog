@@ -60,6 +60,7 @@ export default {
           {
             withCredentials: true,
             headers: {
+             // 'Authorization':'Bearer '+localStorage.getItem('my_token')
               'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
             }
           }

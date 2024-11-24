@@ -18,7 +18,7 @@
       </thead>
       <tbody>
       <template v-for="post in this.posts">
-        <tr>
+        <tr v-if="post.user_id == user_id">
           <td class="whitespace-nowrap px-6 py-4">{{ post.id }}</td>
           <td class="whitespace-nowrap px-6 py-4 font-medium">
             <router-link :to="{name:'show',params:{id:post.id}}">{{ post.title }}</router-link>
@@ -28,14 +28,14 @@
           <td class="py-1 w-2">
             <img :src="post.prev_image?'http://localhost:8080/storage/'+ post.prev_image:''" alt="">
           </td>
-          <td  class="whitespace-nowrap px-6 py-4 ">
+          <td class="whitespace-nowrap px-6 py-4 ">
             <router-link :to="{name:'edit',params:{id:post.id}}">
               <a class="inline-block rounded bg-blue-900 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-blue-950 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
                 Edit
               </a>
             </router-link>
           </td>
-          <td  class="whitespace-nowrap px-6 py-4 ">
+          <td class="whitespace-nowrap px-6 py-4 ">
             <a @click.prevent="deletePost(post.id)" href="javascript:;"
                class="inline-block rounded bg-red-600 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
               Delete
@@ -49,13 +49,10 @@
 </template>
 <script>
 import axios from "axios";
-//import {RouterLink} from "vue-router";
 import {useCookies} from "vue3-cookies";
 export default {
-  name: "Index",
-  components: {
-    // RouterLink,
-  },
+  name: "Personal",
+
   setup() {
     const {cookies} = useCookies();
     return {cookies};
@@ -63,28 +60,23 @@ export default {
   data() {
     return {
       posts: null,
-      status:localStorage.getItem("status")
+      status:localStorage.getItem("status"),
+      user_id:localStorage.getItem('user_id')
     }
   },
   mounted() {
-    this.getPosts();
-    this.getStatus();
+    this.getPosts()
   },
   methods: {
-    getStatus(){
-      this.status =  localStorage.getItem('status');
-    },
     getPosts() {
-
       axios.get('http://localhost:8080/api/posts', {
         headers :{
           'Authorization':'Bearer '+localStorage.getItem('my_token')
+
         }
       }).then(data => {
-            console.log(data.data);
             this.posts = data.data.posts
           })
-
     },
     deletePost(id) {
       axios.delete(`http://localhost:8080/api/posts/${id}`,
@@ -96,7 +88,6 @@ export default {
           }
       ).then(data => {
             this.getPosts();
-
           })
     },
   },

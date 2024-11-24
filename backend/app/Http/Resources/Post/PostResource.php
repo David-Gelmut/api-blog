@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Post;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,7 @@ class PostResource extends JsonResource
     {
         return [
             'id'=>$this->id,
+            'user_id'=>$this->user_id,
             'title'=>$this->title,
             'preview'=>$this->preview,
             'description'=>$this->description,
