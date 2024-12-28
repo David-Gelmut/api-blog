@@ -11,7 +11,7 @@ class CommentFormRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth('admin')->check();
+        return true;
     }
 
     /**

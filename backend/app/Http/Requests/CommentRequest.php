@@ -11,7 +11,7 @@ class CommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth('web')->check();
+        return true;
     }
 
     /**
@@ -26,11 +26,11 @@ class CommentRequest extends FormRequest
             'user_id'=>['required','exists:users,id']
         ];
     }
-
+/*
     protected function prepareForValidation()
     {
         $this->merge([
             'user_id'=>auth('web')->user()->id
         ]);
-    }
+    }*/
 }

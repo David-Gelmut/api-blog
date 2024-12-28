@@ -1,47 +1,32 @@
 <template>
-  <div v-if="!status">
-     <div class="font-bold flex-row items-center flex p-2">
-       <p>Зарегистрируйтесь или войдите в свой аккаунт чтобы увидеть списоу своих постов</p>
-     </div>
-  </div>
-  <div v-if="status" class="flex items-center w-4/5 m-auto">
-    <table class="min-w-full text-left text-sm text-gray-500 font-light text-surface dark:text-white bg-blue-50">
-      <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+  <div class="p-6 overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
       <tr>
-        <th scope="col" class="px-6 py-4">ID</th>
-        <th scope="col" class="px-6 py-4">Title</th>
-        <th scope="col" class="px-6 py-4">Preview</th>
-        <th scope="col" class="px-6 py-4">Description</th>
-        <th scope="col" class="px-6 py-4">Edit</th>
-        <th scope="col" class="px-6 py-4">Delete</th>
+        <th scope="col" class="px-6 py-3"><span>ID</span></th>
+        <th scope="col" class="px-6 py-3"><span>Title</span></th>
+        <th scope="col" class="px-6 py-3"><span>Preview</span></th>
+        <th scope="col" class="px-6 py-3"><span>Description</span></th>
+        <th scope="col" class="px-6 py-3"><span>Image</span></th>
+        <th scope="col" class="px-6 py-3"><span>Category</span></th>
+        <th scope="col" class="px-6 py-3"><span>Author</span></th>
       </tr>
       </thead>
       <tbody>
       <template v-for="post in this.posts">
-        <tr>
-          <td class="whitespace-nowrap px-6 py-4">{{ post.id }}</td>
-          <td class="whitespace-nowrap px-6 py-4 font-medium">
-            <router-link :to="{name:'show',params:{id:post.id}}">{{ post.title }}</router-link>
-          </td>
-          <td class="whitespace-nowrap px-6 py-4">{{ post.preview }}</td>
-          <td class="whitespace-nowrap px-6 py-4">{{ post.description }}</td>
-          <td class="py-1 w-2">
-            <img :src="post.prev_image?'http://localhost:8080/storage/'+ post.prev_image:''" alt="">
-          </td>
-          <td  class="whitespace-nowrap px-6 py-4 ">
-            <router-link :to="{name:'edit',params:{id:post.id}}">
-              <a class="inline-block rounded bg-blue-900 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-blue-950 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
-                Edit
-              </a>
-            </router-link>
-          </td>
-          <td  class="whitespace-nowrap px-6 py-4 ">
-            <a @click.prevent="deletePost(post.id)" href="javascript:;"
-               class="inline-block rounded bg-red-600 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
-              Delete
-            </a>
-          </td>
-        </tr>
+      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.id }}</td>
+        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+          <router-link :to="{name:'show',params:{id:post.id}}">{{ post.title }}</router-link>
+        </td>
+        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.preview }}</td>
+        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.description }}</td>
+        <td class="p-4">
+          <img :src="post.prev_image?'http://localhost:8080/storage/'+ post.prev_image:''" class="w-16 md:w-32 max-w-full max-h-full" alt="Apple Watch">
+        </td>
+        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white"> {{post.category_name}}</td>
+        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{post.user_name}}</td>
+      </tr>
       </template>
       </tbody>
     </table>
@@ -63,29 +48,66 @@ export default {
   data() {
     return {
       posts: null,
-      status:localStorage.getItem("status")
+   //   status:localStorage.getItem("status"),
+      categories:null,
+      users:null
     }
   },
   mounted() {
+   // this.getCategories();
     this.getPosts();
-    this.getStatus();
+  //  this.getStatus();
+
+   // this.getUsers();
   },
-  methods: {
+  methods: {/*
+    getCategories(){
+      axios.get('http://localhost:8080/api/categories',{
+        withCredentials: true,
+        headers :{
+         // 'Authorization':'Bearer '+localStorage.getItem('my_token')
+          'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
+        }
+      }).then(
+          res =>{
+          //  console.log(res.data.categories);
+            this.categories = res.data.categories;
+          }
+      )
+    },
+    getUsers(){
+      axios.get('http://localhost:8080/api/users',{
+        withCredentials: true,
+        headers :{
+          'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
+        }
+      }).then(
+          res =>{
+          //  console.log(res.data.users);
+            this.users = res.data.users;
+          }
+      )
+    },*/
+
+
     getStatus(){
       this.status =  localStorage.getItem('status');
     },
     getPosts() {
 
       axios.get('http://localhost:8080/api/posts', {
+        withCredentials: true,
         headers :{
-          'Authorization':'Bearer '+localStorage.getItem('my_token')
+          'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
+         // 'Authorization':'Bearer '+localStorage.getItem('my_token')
         }
       }).then(data => {
-            console.log(data.data);
+          //  console.log(data.data);
             this.posts = data.data.posts
           })
 
     },
+    /*
     deletePost(id) {
       axios.delete(`http://localhost:8080/api/posts/${id}`,
           {
@@ -98,7 +120,19 @@ export default {
             this.getPosts();
 
           })
-    },
+    },*/
+
+    /*
+    test(id){
+      if(this.categories){
+        this.categories.forEach(function(item, index, arr){
+          if(item.hasOwnProperty('id') === id) {
+            return (item.hasOwnProperty('title'))
+          }
+
+        });
+      }
+    }*/
   },
 }
 </script>

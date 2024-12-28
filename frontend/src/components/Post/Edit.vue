@@ -18,6 +18,15 @@
             <div>
               <img class="h-64 w-64" :src="prev_image?'http://localhost:8080/storage/'+ prev_image:''">
             </div>
+            <label for="categories" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Выберите
+              категорию</label>
+            <p v-if="!category_id" class="text-red-500">Обязательное поле</p>
+            <select v-model="category_id" id="categories"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <template v-for="category in this.categories">
+                <option :value="category.id">{{category.title}}</option>
+              </template>
+            </select>
             <button :disabled="!isDisabled" @click.prevent="editPost()"
                     class="text-center w-full bg-blue-900 rounded-md text-white py-3 font-medium">Сохранить
             </button>
@@ -44,13 +53,29 @@ export default {
       title: null,
       preview: null,
       description: null,
-      prev_image: null
+      prev_image: null ,
+      category_id:null,
+      categories:null
     }
   },
   mounted() {
-    this.getPost()
+    this.getPost();
+    this.getCategories();
+
   },
   methods: {
+    getCategories(){
+      axios.get('http://localhost:8080/api/categories',{
+        headers :{
+          'Authorization':'Bearer '+localStorage.getItem('my_token')
+        }
+      }).then(
+          res =>{
+            //  console.log(res.data.categories);
+            this.categories = res.data.categories;
+          }
+      )
+    },
     getPost() {
       axios.get(`http://localhost:8080/api/posts/${this.$route.params.id}`, {
           //  withCredentials: true,
@@ -60,21 +85,22 @@ export default {
             }
           }
       ).then(data => {
-        console.log(data);
+       // console.log(data);
         this.title = data.data.data.title;
         this.preview = data.data.data.preview;
-        this.description = data.data.data.description
-        this.prev_image = data.data.data.prev_image
+        this.description = data.data.data.description;
+        this.prev_image = data.data.data.prev_image ;
+        this.category_id = data.data.data.category_id;
       })
     },
     editPost() {
-      /*
+
       let formData = new FormData();
       formData.append('title', this.title);
       formData.append('preview', this.preview);
       formData.append('description', this.description);
       if (this.prev_image)
-        formData.append('prev_image', this.prev_image);*/
+        formData.append('prev_image', this.prev_image);
 
       axios.patch(`http://localhost:8080/api/posts/${this.$route.params.id}`,
           // formData
@@ -101,7 +127,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return this.title && this.preview && this.description;
+      return this.title && this.preview && this.description&&this.category_id;
     }
   }
 }

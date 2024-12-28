@@ -23,6 +23,10 @@
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                 Автор</th>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                Категория</th>
+                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                Тэги</th>
+                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                 Дата создания</th>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                 Дата обновления</th>
@@ -48,25 +52,42 @@
                                     <div class="text-sm leading-5 text-gray-900">{{$post->user->name??'-'}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                    <div class="text-sm leading-5 text-gray-900">{{$post->category->title??'-'}}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                    @foreach($post->tags as $tag)
+                                        <div class="text-sm font-bold  leading-5 text-blue-50 bg-blue-400 m-1 rounded-xl p-1 pl-3">
+                                           {{$tag->title}}
+                                        </div>
+                                    @endforeach
+                                </td>
+                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                     <div class="text-sm leading-5 text-gray-900">{{$post->created_at}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                     <div class="text-sm leading-5 text-gray-900">{{$post->updated_at}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-                                    <a href="{{route('admin.posts.edit',$post)}}" class="text-indigo-600 hover:text-indigo-900">Редактировать</a>
-                                    <form  action="{{route('admin.posts.destroy',$post)}}" method="post">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900">Удалить</button>
-                                    </form>
+                                    @can('update', $post)
+                                        <a href="{{route('admin.posts.edit',$post)}}" class="text-indigo-600 hover:text-indigo-900">Редактировать</a>
+                                    @endcan
+                                    @can('delete', $post)
+                                            <form  action="{{route('admin.posts.destroy',$post)}}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-900">Удалить</button>
+                                            </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+
                 </div>
+
             </div>
         </div>
     </div>
+    {{$posts ->links()}}
 @endsection

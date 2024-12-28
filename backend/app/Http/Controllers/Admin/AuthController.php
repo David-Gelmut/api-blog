@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -11,6 +12,10 @@ class AuthController extends Controller
 {
     public function login(): View
     {
+        if(auth()->check()){
+            $posts = Post::query()->orderBy('created_at', 'DESC')->get();
+            return \view('admin.posts.index',compact('posts'));
+        }
         return view('admin.auth.login');
     }
 
@@ -21,7 +26,7 @@ class AuthController extends Controller
             'password' => ['required']
         ]);
 
-        if (auth('admin')->attempt($data)) {
+        if (auth()->attempt($data)) {
             return redirect(route('admin.posts.index'));
         }
 
@@ -30,7 +35,7 @@ class AuthController extends Controller
 
     public function logout(): RedirectResponse
     {
-        auth('admin')->logout();
+        auth()->logout();
         return redirect(route('admin.login'));
     }
 }

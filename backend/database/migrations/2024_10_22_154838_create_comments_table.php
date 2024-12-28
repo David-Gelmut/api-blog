@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class);
-            $table->foreignIdFor(\App\Models\Post::class);
+            $table->unsignedBigInteger('user_id')->index()->nullable();
+            $table->unsignedBigInteger('post_id')->index()->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('post_id')->references('id')->on('posts')->cascadeOnDelete();
             $table->text('text');
             $table->timestamps();
         });

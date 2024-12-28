@@ -12,7 +12,7 @@
           </p>
         </div>
       </div>
-      <div class="flex flex-row items-center gap-2 mt-2 ml-auto">
+      <!--div-- class="flex flex-row items-center gap-2 mt-2 ml-auto">
         <router-link :to="{name:'edit',params:{id:post.id}}">
           <a class="inline-block rounded bg-blue-900 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-blue-950 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
             Edit
@@ -22,39 +22,29 @@
            class="inline-block rounded bg-red-600 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
           Delete
         </a>
-      </div>
-
-
-
-
-       <!--div>
+      </div-->
+       <div>
         <section class="rounded-b-lg mt-4">
-          <form action="{{route('comment',$post)}}" method="post">
-            @csrf
-            @error('text')
-            <p class="text-red-500">{{$message}}</p>
-            @enderror
-            <textarea name="text"   class="w-full shadow-inner p-4 border-0 mb-4 rounded-lg focus:shadow-outline text-2xl @error('text') border-red-800 @enderror" placeholder="Ваш комментарий..." spellcheck="false"></textarea>
-            <button type="submit" class="font-bold py-2 px-4 w-full bg-purple-400 text-lg text-white shadow-md rounded-lg ">Написать </button>
-          </form>
+          <div v-if="status">
+            <p v-if="!text" class="text-red-500">Обязательное поле</p>
+            <textarea v-model="text"   class="w-full shadow-inner p-4 border-0 mb-4 rounded-lg focus:shadow-outline text-2xl @error('text') border-red-800 @enderror" placeholder="Ваш комментарий..." spellcheck="false"></textarea>
+            <button :disabled="!isDisabled" @click.prevent="createComment" type="submit" class="font-bold py-2 px-4 w-full bg-blue-600 text-lg text-white shadow-md rounded-lg ">Написать </button>
+          </div>
           <div id="task-comments" class="pt-4">
-            @foreach($post->comments as $comment)
-            <div class="bg-white rounded-lg p-3  flex flex-col justify-center items-center md:items-start shadow-lg mb-4">
-              <div class="flex flex-row justify-center mr-2">
-                <h3 class="text-purple-600 font-semibold text-lg text-center md:text-left ">{{$comment->user->name}}</h3>
+            <h3>Комментарии</h3>
+            <template v-for="comment in this.comments">
+              <div class="bg-white rounded-lg p-3  flex flex-col justify-center items-center md:items-start shadow-lg mb-4">
+                <div class="flex flex-row justify-center items-center mr-2 gap-3">
+                  <h3 class="text-purple-600 font-semibold text-lg text-center md:text-left ">{{comment.user_name}}</h3>
+                  <p>{{comment.created_at}}</p>
+                </div>
+                <p style="width: 90%" class="text-gray-600 text-lg text-center md:text-left ">{{comment.text}}</p>
               </div>
-              <p style="width: 90%" class="text-gray-600 text-lg text-center md:text-left ">{{$comment->text}}</p>
-            </div>
-            @endforeach
+            </template>
           </div>
         </section>
-      </div-->
-
-
+      </div>
     </div>
-
-
-
   </div>
 </template>
 <script>
@@ -70,23 +60,65 @@ export default {
   },
   data() {
     return {
-      post: null
+      post: null,
+      comments:null,
+      text:null,
+      user_id:localStorage.getItem('user_id'),
+      error:null,
+      status:localStorage.getItem('status')
     }
   },
   mounted() {
-    this.getPost()
+    this.getPost();
+    this.getComments()
   },
   methods: {
+    createComment() {
+      axios.post(`http://localhost:8080/api/comments/${this.$route.params.id}`,{
+        text:this.text,
+        post_id:this.$route.params.id,
+        user_id:this.user_id
+
+      },{
+        withCredentials: true,
+        headers :{
+          'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN"),
+          // 'Authorization':'Bearer '+localStorage.getItem('my_token')
+        }
+      }).then(data => {
+           this.getComments();
+       // console.log(data.data.message);
+
+        this.error = data.data.message;
+        if(this.error){
+          alert(this.error);
+        }
+
+        // this.$router.push({name:'home'})
+          }).catch(err => {
+          console.log(err);
+          //  this.error = err.message;
+      })
+    },
+    getComments(){
+      axios.get(`http://localhost:8080/api/comments/${this.$route.params.id}`,{
+        withCredentials: true,
+        headers :{
+          'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
+        }
+      }).then(data => {
+
+        this.comments = data.data.comments;
+        console.log(this.comments);
+      })
+    },
     getPost() {
       axios.get(`http://localhost:8080/api/posts/${this.$route.params.id}`,{
-       // withCredentials: true,
+        withCredentials: true,
         headers :{
-          'Authorization':'Bearer '+localStorage.getItem('my_token')
-          //'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
+          'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
         }
-      })
-          .then(data => {
-           // console.log(data.data.data);
+      }).then(data => {
             this.post = data.data.data;
       })
     },
@@ -94,7 +126,6 @@ export default {
        axios.delete(`http://localhost:8080/api/posts/${id}`,{
          withCredentials: true,
          headers :{
-           //'Authorization':'Bearer '+localStorage.getItem('my_token')
            'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
          }
        })
@@ -102,6 +133,11 @@ export default {
             this.$router.push({name:'home'})
           })
     },
+  },
+  computed: {
+    isDisabled() {
+      return this.text;
+    }
   }
 }
 </script>

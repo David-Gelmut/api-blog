@@ -3,7 +3,7 @@
     <div class="bg-white w-96 shadow-xl rounded p-5">
       <h1 class="text-3xl font-medium">Регистрация</h1>
       <form class="space-y-5 mt-5">
-        <input v-model="name" type="text" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Email" />
+        <input v-model="name" type="text" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Имя" />
         <input v-model="email" type="text" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Email" />
         <input v-model="password" type="password" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Пароль" />
         <input @click.prevent="register"  type="password" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Подтверждение пароля" />

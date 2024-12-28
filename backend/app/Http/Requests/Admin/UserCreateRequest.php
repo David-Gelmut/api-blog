@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Enums\Roles;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserCreateRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth('admin')->check();
+        return true;
     }
 
     /**
@@ -24,7 +26,8 @@ class UserCreateRequest extends FormRequest
         return [
             'name' => ['required', 'string'],
             'email' => ['required', 'email', 'string','unique:users,email'],
-            'password' => [ 'required','confirmed']
+            'password' => [ 'required','confirmed'],
+            'role'=>['required','integer']
         ];
     }
 }

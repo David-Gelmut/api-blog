@@ -8,6 +8,7 @@ import Login from "@/components/Auth/Login.vue";
 import Register from "@/components/Auth/Register.vue";
 import Personal from "@/components/Post/Personal.vue";
 import Forgot from "@/components/Auth/Forgot.vue";
+import Contact from "@/components/Contact.vue";
 
 
 const router = createRouter({
@@ -58,12 +59,18 @@ const router = createRouter({
             name: 'forgot',
             component: Forgot
 
+        },
+        {
+            path: '/contact',
+            name: 'contact',
+            component: Contact
+
         }
     ]
 })
 
 router.beforeEach((to, from, next) => {
-    const status = localStorage.getItem('status');
+/*    const status = localStorage.getItem('status');
     console.log(to.name)
     if (!status) {
         if (to.name === 'login' || to.name === 'register'|| to.name === 'forgot') {
@@ -79,7 +86,7 @@ router.beforeEach((to, from, next) => {
         return next({
             name: 'home'
         });
-    }
+    }*/
 
     next();
 

@@ -25,7 +25,8 @@ class PostFormRequest extends FormRequest
             'title'=>['required'],
             'description'=>['required'],
             'preview'=>['required'],
-            'prev_image'=>['file']
+            'prev_image'=>['file'],
+            'category_id'=>['required']
         ];
     }
 }

@@ -3,7 +3,7 @@
     <div class="bg-white w-96 shadow-xl rounded p-5">
       <h1 class="text-3xl font-medium">Восстановление пароля</h1>
       <form class="space-y-5 mt-5">
-        <input v-model="email" type="text" class="w-full h-12 border border-red-500 rounded px-3" placeholder="Email" />
+        <input v-model="email" type="text" class="w-full h-12 border border-gray-800 rounded px-3" placeholder="Email" />
         <div>
           <router-link :to="{name:'login'}">
             <a href="#" class="font-medium text-blue-900 hover:bg-blue-300 rounded-md p-2">Вспомнил пароль</a>
@@ -45,9 +45,9 @@ export default {
             }
         ).then(res => {
          // console.log(res);
-          localStorage.setItem('my_token',res.data.token)
-          localStorage.setItem("status",'authorization');
-          this.$router.push({name: 'home'});
+          //localStorage.setItem('my_token',res.data.token)
+          //localStorage.setItem("status",'authorization');
+          this.$router.push({name: 'login'});
        //   location.reload()
         }).catch(err => {
           console.log(err.message);

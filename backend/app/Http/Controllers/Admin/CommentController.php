@@ -19,7 +19,7 @@ class CommentController extends Controller
         return view('admin.comments.edit',compact('comment'));
     }
 
-    public function update(CommentFormRequest $request,Comment $comment)
+    public function update(CommentFormRequest $request,Comment $comment):View
     {
         $data = $request->validated();
         $comment->update($data);
@@ -28,7 +28,7 @@ class CommentController extends Controller
         return view('admin.posts.edit',compact('post'));
     }
 
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment):View
     {
         $comment->delete();
         $post = $comment->post;

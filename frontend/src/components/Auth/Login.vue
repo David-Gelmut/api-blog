@@ -45,6 +45,9 @@ export default {
       axios.get('http://localhost:8080/sanctum/csrf-cookie', {
         withCredentials: true,
       }).then(response => {
+         localStorage.removeItem('my_token');
+         localStorage.removeItem('user_id');
+         localStorage.removeItem("status");
           axios.post('http://localhost:8080/api/login', {
                 email: this.email, password: this.password
               },{
@@ -54,16 +57,16 @@ export default {
                 }
               }
           ).then(res => {
-           // console.log(res.data.token);
+
+            console.log(res.data);
             localStorage.setItem('my_token',res.data.token);
             localStorage.setItem('user_id',res.data.user.id);
-
             localStorage.setItem("status",'authorization');
             this.$router.push({name: 'home'});
            // location.reload()
 
           }).catch(err => {
-            console.log(err);
+          //  console.log(err);
             this.error = err.message;
           })
       });

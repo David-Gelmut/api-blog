@@ -9,6 +9,7 @@ use App\Http\Requests\Api\UserStoreRequest;
 use App\Http\Requests\ForgotRequest;
 use App\Http\Resources\User\UserResource;
 use App\Mail\ForgotPasswordMailer;
+use App\Models\Enums\Roles;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
-    public function register(UserStoreRequest $request): JsonResponse
+    public function register(UserStoreRequest $request): void
     {
         $data = $request->validated();
         User::create($data);
@@ -27,25 +28,37 @@ class AuthController extends Controller
 
     public function login(UserLoginRequest $request): JsonResponse
     {
+        if(auth()->check()){
+            return response()->json([
+                'user' =>auth()->user(),
+            ]);
+        }
         $data = $request->validated();
         if (!Auth::attempt($data)) {
+
             return response()->json([
                 'message' => 'Ошибка авторизации.Проверьте правильность введенных данных'
             ], 401);
         }
         $user = User::query()->where('email', $data['email'])->first();
-        $user->tokens()->delete();
+       // $user->tokens()->delete();
+      //  $token = $user->createToken('auth_token')->plainTextToken;
+        $request->session()->regenerate();
         return response()->json([
             'user' => $user,
-            'token' => $user->createToken("token of user{$user->name}")->plainTextToken
+          //  'token' => $token,
+            'role' => $user->role,
         ]);
     }
 
-    public function logout(): JsonResponse
+    public function logout(Request $request): JsonResponse
     {
         $user = Auth::user();
-        Auth::guard('web')->logout();
-        $user->tokens()->delete();
+        auth()->logout();
+    //    $user->tokens()->delete();
+        $request->session()->invalidate();
+
+     //   $request->session()->regenerateToken();
         return response()->json([
             'message' => 'Пользователь разлогинился',
             'user' => $user

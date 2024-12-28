@@ -22,7 +22,18 @@
                 @error('password_confirmation')
                 <p class="text-red-500">{{$message}}</p>
                 @enderror
-                <input name="password_confirmation"  type="password"  type="text" class="w-full h-12 border border-gray-800 @error('password_confirmation') border-red-800 @enderror rounded px-3" placeholder="Подтверждение пароля" />
+                <input name="password_confirmation"  type="password"   class="w-full h-12 border border-gray-800 @error('password_confirmation') border-red-800 @enderror rounded px-3" placeholder="Подтверждение пароля" />
+                @error('role')
+                    <p class="text-red-500">{{$message}}</p>
+                @enderror
+                <label for="roles" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Выберите Роль</label>
+                <select id="roles" name="role"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="">Не выбрано</option>
+                    @foreach(\App\Models\Enums\Roles::options() as $key=>$role)
+                        <option value="{{$key}}">{{$role}}</option>
+                    @endforeach
+                </select>
                 <button type="submit" class="text-center w-full bg-blue-900 rounded-md text-white py-3 font-medium">Сохранить</button>
             </form>
         </div>

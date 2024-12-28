@@ -16,6 +16,15 @@
                  placeholder="Описание"/>
           <input type="file" id="file" ref="prev_image" v-on:change="handleFileUpload()" class="w-full h-12"
                  placeholder="Изображение"/>
+          <label for="categories" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Выберите
+            категорию</label>
+          <p v-if="!category_id" class="text-red-500">Обязательное поле</p>
+          <select v-model="category_id" id="categories"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <template v-for="category in this.categories">
+              <option :value="category.id">{{category.title}}</option>
+            </template>
+          </select>
           <button :disabled="!isDisabled" @click.prevent="addPost()"
                   class="text-center w-full bg-blue-900 rounded-md text-white py-3 font-medium">Сохранить
           </button>
@@ -42,19 +51,38 @@ export default {
       title: null,
       preview: null,
       description: null,
-      prev_image: null
+      prev_image: null,
+      category_id:null,
+      categories:null
     }
   },
   mounted() {
+    this.getCategories()
   },
   methods: {
+    getCategories(){
+      axios.get('http://localhost:8080/api/categories',{
+        headers :{
+          withCredentials: true,
+          'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
+        //  'Authorization':'Bearer '+localStorage.getItem('my_token')
+        }
+      }).then(
+          res =>{
+          //  console.log(res.data.categories);
+            this.categories = res.data.categories;
+          }
+      )
+    },
     addPost() {
       let formData = new FormData();
       formData.append('title', this.title);
-      formData.append('preview', this.preview,);
+      formData.append('preview', this.preview);
       formData.append('description', this.description);
+      formData.append('category_id', this.category_id);
       if (this.prev_image)
         formData.append('prev_image', this.prev_image);
+      //console.log(formData)
       axios.post('http://localhost:8080/api/posts',
           formData,
           {
@@ -65,7 +93,7 @@ export default {
             }
           }
       ).then(data => {
-        this.$router.push({name: 'home'})
+        this.$router.push({name: 'personal'})
       })
     },
     handleFileUpload() {
@@ -75,7 +103,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return this.title && this.preview && this.description;
+      return this.title && this.preview && this.description&&this.category_id;
     }
   }
 }

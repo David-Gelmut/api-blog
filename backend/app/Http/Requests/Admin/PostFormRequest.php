@@ -11,7 +11,7 @@ class PostFormRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth('admin')->check();
+        return true;
     }
 
     /**
@@ -25,7 +25,9 @@ class PostFormRequest extends FormRequest
             'title'=>['required'],
             'description'=>['required'],
             'preview'=>['required'],
-            'prev_image'=>['image']
+            'prev_image'=>['image'],
+            'category_id'=>['required'],
+            'tags'=>''
         ];
     }
 }
