@@ -23,7 +23,7 @@ class CommentRequest extends FormRequest
     {
         return [
             'text'=>['required','string','min:5'],
-            'user_id'=>['required','exists:users,id']
+           // 'user_id'=>['required','exists:users,id']
         ];
     }
 /*

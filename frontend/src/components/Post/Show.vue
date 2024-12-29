@@ -63,21 +63,33 @@ export default {
       post: null,
       comments:null,
       text:null,
-      user_id:localStorage.getItem('user_id'),
+    //  user_id:localStorage.getItem('user_id'),
       error:null,
       status:localStorage.getItem('status')
     }
   },
   mounted() {
     this.getPost();
-    this.getComments()
+   // this.getComments()
   },
   methods: {
+    getPost() {
+      axios.get(`http://localhost:8080/api/posts/${this.$route.params.id}`,{
+        withCredentials: true,
+        headers :{
+          'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
+        }
+      }).then(data => {
+        console.log(data.data.post.comments);
+        this.post = data.data.post;
+        this.comments = data.data.post.comments;
+      })
+    },
     createComment() {
       axios.post(`http://localhost:8080/api/comments/${this.$route.params.id}`,{
         text:this.text,
         post_id:this.$route.params.id,
-        user_id:this.user_id
+     //   user_id:this.user_id
 
       },{
         withCredentials: true,
@@ -86,8 +98,8 @@ export default {
           // 'Authorization':'Bearer '+localStorage.getItem('my_token')
         }
       }).then(data => {
-           this.getComments();
-       // console.log(data.data.message);
+           this.getPost() ;
+        console.log(data);
 
         this.error = data.data.message;
         if(this.error){
@@ -100,6 +112,7 @@ export default {
           //  this.error = err.message;
       })
     },
+    /*
     getComments(){
       axios.get(`http://localhost:8080/api/comments/${this.$route.params.id}`,{
         withCredentials: true,
@@ -111,17 +124,8 @@ export default {
         this.comments = data.data.comments;
         console.log(this.comments);
       })
-    },
-    getPost() {
-      axios.get(`http://localhost:8080/api/posts/${this.$route.params.id}`,{
-        withCredentials: true,
-        headers :{
-          'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
-        }
-      }).then(data => {
-            this.post = data.data.data;
-      })
-    },
+    },*/
+
     deletePost(id) {
        axios.delete(`http://localhost:8080/api/posts/${id}`,{
          withCredentials: true,

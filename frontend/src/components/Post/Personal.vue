@@ -20,7 +20,7 @@
       </thead>
       <tbody>
       <template v-for="post in this.posts">
-        <tr v-if="user_id == post.user_id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <tr  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
           <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.id }}</td>
           <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
             <router-link :to="{name:'show',params:{id:post.id}}">{{ post.title }}</router-link>
@@ -30,7 +30,7 @@
           <td class="p-4">
             <img :src="post.prev_image?'http://localhost:8080/storage/'+ post.prev_image:''" class="w-16 md:w-32 max-w-full max-h-full" alt="Apple Watch">
           </td>
-          <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.category_name}}</td>
+          <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.category.title}}</td>
           <td class="px-6 py-4">
             <router-link :to="{name:'edit',params:{id:post.id}}">
               <a href="#" class="font-medium text-blue-500 dark:text-blue-500 hover:underline">Edit</a>
@@ -59,7 +59,6 @@ export default {
     return {
       posts: null,
       status:localStorage.getItem("status"),
-      user_id:localStorage.getItem('user_id')
     }
   },
   mounted() {
@@ -67,15 +66,15 @@ export default {
   },
   methods: {
     getPosts() {
-      axios.get('http://localhost:8080/api/posts', {
+      axios.get('http://localhost:8080/api/auth_posts', {
         withCredentials: true,
         headers :{
           'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
         }
       }).then(data => {
+        //console.log(data);
+        this.posts = data.data.posts;
 
-            this.posts = data.data.posts;
-            console.log(this.posts);
       })
     },
     deletePost(id) {

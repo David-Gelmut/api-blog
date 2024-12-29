@@ -35,7 +35,7 @@ class CommentController extends Controller
             ]);
     }
 
-    public function store($post_id, CommentRequest $request):JsonResponse
+    public function store($post_id, CommentRequest $request)//:JsonResponse
     {
         $user_id = auth()->user()->id;
         if(auth()->user()->role == 3){
@@ -44,12 +44,14 @@ class CommentController extends Controller
             ]);
         }
 
-
+        $data = $request->validated();
+        $data['user_id'] =  $user_id;
         $post = Post::query()->findOrFail($post_id);
-        $comment = $post->comments()->create($request->validated());
+        $comment = $post->comments()->create($data);
+      //  $comment->user_id = $user_id ;
         return response()->json([
-            'user_id'=>$user_id,
-            'post_id'=>$post_id,
+          //  'user_id'=>$user_id,
+          //  'post_id'=>$post_id,
             'comment'=> new CommentResource($comment),
           //  'test'=>
         ]);

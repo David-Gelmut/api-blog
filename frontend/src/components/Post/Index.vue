@@ -14,22 +14,27 @@
       </thead>
       <tbody>
       <template v-for="post in this.posts">
-      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.id }}</td>
-        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-          <router-link :to="{name:'show',params:{id:post.id}}">{{ post.title }}</router-link>
-        </td>
-        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.preview }}</td>
-        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.description }}</td>
-        <td class="p-4">
-          <img :src="post.prev_image?'http://localhost:8080/storage/'+ post.prev_image:''" class="w-16 md:w-32 max-w-full max-h-full" alt="Apple Watch">
-        </td>
-        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white"> {{post.category_name}}</td>
-        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{post.user_name}}</td>
-      </tr>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.id }}</td>
+          <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+            <router-link :to="{name:'show',params:{id:post.id}}">{{ post.title }}</router-link>
+          </td>
+          <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.preview }}</td>
+          <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ post.description }}</td>
+          <td class="p-4">
+            <img :src="post.prev_image?'http://localhost:8080/storage/'+ post.prev_image:''" class="w-16 md:w-32 max-w-full max-h-full" alt="Apple Watch">
+          </td>
+          <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white"> {{post.category.title}}</td>
+          <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{post.user.name}}</td>
+        </tr>
       </template>
       </tbody>
     </table>
+    <!--div-- class="flex flex-row gap-3 items-center">
+      <a @click="getPostsPrev()">prev</a>
+      <a @click="getPostsNext()">next</a>
+    </div-->
+
   </div>
 </template>
 <script>
@@ -48,9 +53,8 @@ export default {
   data() {
     return {
       posts: null,
-   //   status:localStorage.getItem("status"),
-      categories:null,
-      users:null
+      prev:null,
+      next:null
     }
   },
   mounted() {
@@ -60,79 +64,49 @@ export default {
 
    // this.getUsers();
   },
-  methods: {/*
-    getCategories(){
-      axios.get('http://localhost:8080/api/categories',{
-        withCredentials: true,
-        headers :{
-         // 'Authorization':'Bearer '+localStorage.getItem('my_token')
-          'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
-        }
-      }).then(
-          res =>{
-          //  console.log(res.data.categories);
-            this.categories = res.data.categories;
-          }
-      )
-    },
-    getUsers(){
-      axios.get('http://localhost:8080/api/users',{
-        withCredentials: true,
-        headers :{
-          'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
-        }
-      }).then(
-          res =>{
-          //  console.log(res.data.users);
-            this.users = res.data.users;
-          }
-      )
-    },*/
+  methods: {
 
-
-    getStatus(){
-      this.status =  localStorage.getItem('status');
-    },
     getPosts() {
 
       axios.get('http://localhost:8080/api/posts', {
         withCredentials: true,
         headers :{
-          'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
+        //  'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
          // 'Authorization':'Bearer '+localStorage.getItem('my_token')
         }
       }).then(data => {
-          //  console.log(data.data);
+            console.log(data);
             this.posts = data.data.posts
+         //   this.prev = data.data.test.prev_page_url;
+          //  this.next = data.data.test.next_page_url;
           })
 
     },
-    /*
-    deletePost(id) {
-      axios.delete(`http://localhost:8080/api/posts/${id}`,
-          {
-            withCredentials: true,
-            headers :{
-              'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
-            }
-          }
-      ).then(data => {
-            this.getPosts();
+    getPostsNext() {
 
-          })
-    },*/
+      axios.get(this.next, {
+        withCredentials: true,
+        headers :{
+        }
+      }).then(data => {
+        console.log( this.next);
+      //  console.log(data);
+        this.posts = data.data.posts
+      })
 
-    /*
-    test(id){
-      if(this.categories){
-        this.categories.forEach(function(item, index, arr){
-          if(item.hasOwnProperty('id') === id) {
-            return (item.hasOwnProperty('title'))
-          }
+    },
+    getPostsPrev() {
 
-        });
-      }
-    }*/
+      axios.get(this.prev, {
+        withCredentials: true,
+        headers :{
+        }
+      }).then(data => {
+        console.log(data);
+        this.posts = data.data.posts
+      })
+
+    },
   },
 }
 </script>

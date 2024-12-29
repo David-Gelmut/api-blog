@@ -80,17 +80,17 @@ export default {
       axios.get(`http://localhost:8080/api/posts/${this.$route.params.id}`, {
           //  withCredentials: true,
             headers: {
-              'Authorization':'Bearer '+localStorage.getItem('my_token')
-          //    'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
+           //   'Authorization':'Bearer '+localStorage.getItem('my_token')
+             // 'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
             }
           }
       ).then(data => {
-       // console.log(data);
-        this.title = data.data.data.title;
-        this.preview = data.data.data.preview;
-        this.description = data.data.data.description;
-        this.prev_image = data.data.data.prev_image ;
-        this.category_id = data.data.data.category_id;
+        console.log(data);
+        this.title = data.data.post.title;
+        this.preview = data.data.post.preview;
+        this.description = data.data.post.description;
+        this.prev_image = data.data.post.prev_image ;
+        this.category_id = data.data.post.category.id;
       })
     },
     editPost() {
@@ -113,7 +113,6 @@ export default {
           {
             withCredentials: true,
             headers: {
-              //'Authorization':'Bearer '+localStorage.getItem('my_token')
               'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
             }
           }).then(data => {

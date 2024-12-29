@@ -63,8 +63,8 @@ export default {
        // console.log(data);
          this.cookies.remove("XSRF-TOKEN");
          localStorage.removeItem('status');
-         localStorage.removeItem('my_token');
-         localStorage.removeItem('user_id');
+        // localStorage.removeItem('my_token');
+        // localStorage.removeItem('user_id');
          this.$router.push({name: 'home'});
          location.reload()
       }).catch(err => {

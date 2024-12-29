@@ -23,7 +23,9 @@ class Post extends Model
 
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class)->orderBy('created_at');
+        return $this
+            ->hasMany(Comment::class)
+            ->orderBy('created_at','desc');
     }
 
     public function user(): BelongsTo

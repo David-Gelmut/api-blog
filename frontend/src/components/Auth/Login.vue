@@ -59,9 +59,9 @@ export default {
           ).then(res => {
 
             console.log(res.data);
-            localStorage.setItem('my_token',res.data.token);
-            localStorage.setItem('user_id',res.data.user.id);
-            localStorage.setItem("status",'authorization');
+           // localStorage.setItem('my_token',res.data.token);
+           // localStorage.setItem('user_id',res.data.user.id);
+            localStorage.setItem("status",true);
             this.$router.push({name: 'home'});
            // location.reload()
 
