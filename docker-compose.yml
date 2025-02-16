@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
     nginx:
@@ -36,10 +36,13 @@ services:
         container_name: project_db
     frontend:
         build:
-            context: docker/frontend
+            context: frontend
             dockerfile: Dockerfile
+        expose:
+            - 5173
+        restart: always
         volumes:
-            - ./frontend/:/var/www/frontend
+            - ./frontend:/var/www/frontend
         ports:
-            - "5678:5678"
+            - "5137:5138"
         container_name: project_frontend

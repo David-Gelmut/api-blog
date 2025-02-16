@@ -3,30 +3,22 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\PostFormRequest;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\Post\PostResource;
 use App\Models\Post;
-use http\Client\Response;
+use App\Services\AdminPostService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
-use SebastianBergmann\CodeCoverage\Util\Percentage;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
-        $posts =  Post::with(['user','category'])
+        $posts = Post::with(['user', 'category'])
             ->orderBy('created_at', 'DESC')
-           // ->paginate(1);
             ->get();
-    /*    $posts = Post::query()
+        //Оставил комментарий для примера варианта выборки
+        /* $posts = Post::query()
             ->join('users','posts.user_id','=','users.id')
             ->join('categories','posts.category_id','=','categories.id')
             ->select([
@@ -39,69 +31,58 @@ class PostController extends Controller
         return
             response()->json([
                 'posts'=>  PostResource::collection($posts),
-               // 'test'=>$posts
             ]);
     }
 
-    public function authPosts():JsonResponse
+    public function authPosts(): JsonResponse
     {
 
-        $posts =  Post::with(['user','category'])
-            ->where('user_id',auth()->user()->id)
+        $posts = Post::with(['user', 'category'])
+            ->where('user_id', auth()->user()->id)
             ->orderBy('created_at', 'DESC')
             ->get();
         return
             response()->json([
-                'posts'=>  PostResource::collection($posts)
+                'posts' => PostResource::collection($posts)
             ]);
     }
 
-    public function show(Post $post):JsonResponse
+    public function show(Post $post): JsonResponse
     {
         return
             response()->json([
-                'post'=>  new PostResource($post->load(['comments']))
+                'post' => new PostResource($post->load(['comments']))
             ]);
 
     }
 
-    public function update(\App\Http\Requests\Api\PostFormEditRequest $request,Post $post)
+    public function update(\App\Http\Requests\Api\PostFormEditRequest $request, Post $post): JsonResponse
     {
         $data = $request->validated();
-        ///  if ($request->has('prev_image')) {
-        //    $prevPath = $request->file('prev_image')->store('posts', 'public');
-        //    $data['prev_image'] = $prevPath;
-        //   }
-        //$data['user_id'] =1;
         $post->update($data);
         return response()->json([
-            'msg'=>'Пост обновлен',
-            //'post'=>  new PostResource($post)
+            'msg' => 'Пост обновлен',
         ]);
     }
 
-    public function store(\App\Http\Requests\Api\PostFormRequest $request)
+    public function store(\App\Http\Requests\Api\PostFormRequest $request, AdminPostService $service): JsonResponse
     {
         $data = $request->validated();
-        if ($request->has('prev_image')) {
-            $prevPath = $request->file('prev_image')->store('posts', 'public');
-            $data['prev_image'] = $prevPath;
-        }
-        $data['user_id'] =auth()->user()->id;
+        $data = $service->getPathPrevImage($request, $data);
+        $data['user_id'] = auth()->user()->id;
         $post = Post::create($data);
-
         return
             response()->json([
-                'msg'=>'Пост создан',
-                'post'=>  new PostResource($post)
+                'msg' => 'Пост создан',
+                'post' => new PostResource($post)
             ]);
     }
 
-    public function delete(Post $post)
+    public function delete(Post $post): JsonResponse
     {
         $post->delete();
         response()->json([
-            'msg'=>'Пост удалён'
+            'msg' => 'Пост удалён'
         ]);
     }
 

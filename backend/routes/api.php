@@ -3,14 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 //Route::get('/comments/{post}',[\App\Http\Controllers\Api\CommentController::class,'index']);
 
-
-Route::get('/categories',[\App\Http\Controllers\Api\CategoryController::class,'index']);
 //Route::get('/users',[\App\Http\Controllers\Api\UserController::class,'index']);
-
-
+Route::get('/categories',[\App\Http\Controllers\Api\CategoryController::class,'index']);
 Route::get('/posts', [\App\Http\Controllers\Api\PostController::class, 'index']);
 Route::get('/posts/{post}', [\App\Http\Controllers\Api\PostController::class, 'show']);
 Route::post('/contact',[\App\Http\Controllers\Api\ContactController::class,'contact']);

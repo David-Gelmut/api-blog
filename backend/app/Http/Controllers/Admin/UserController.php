@@ -6,27 +6,28 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserCreateRequest;
 use App\Http\Requests\Admin\UserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Spatie\FlareClient\View;
+use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->authorizeResource(User::class, 'user');
     }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         $users = User::all();
-        return view('admin.users.index',compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): \Illuminate\View\View
     {
         return view('admin.users.create');
     }
@@ -34,7 +35,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserCreateRequest $request)
+    public function store(UserCreateRequest $request): RedirectResponse
     {
         $data = $request->validated();
         $user = User::create($data);
@@ -52,15 +53,15 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(User $user): \Illuminate\View\View
     {
-        return view('admin.users.edit',compact('user'));
+        return view('admin.users.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, User $user)
+    public function update(UserRequest $request, User $user): RedirectResponse
     {
         $data = $request->validated();
         $user->update($data);
@@ -70,9 +71,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
-       $user->delete();
-       return redirect(route('admin.users.index'));
+        $user->delete();
+        return redirect(route('admin.users.index'));
     }
 }

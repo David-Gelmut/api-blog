@@ -63,14 +63,13 @@ export default {
       post: null,
       comments:null,
       text:null,
-    //  user_id:localStorage.getItem('user_id'),
       error:null,
       status:localStorage.getItem('status')
     }
   },
   mounted() {
     this.getPost();
-   // this.getComments()
+
   },
   methods: {
     getPost() {
@@ -89,13 +88,12 @@ export default {
       axios.post(`http://localhost:8080/api/comments/${this.$route.params.id}`,{
         text:this.text,
         post_id:this.$route.params.id,
-     //   user_id:this.user_id
 
       },{
         withCredentials: true,
         headers :{
           'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN"),
-          // 'Authorization':'Bearer '+localStorage.getItem('my_token')
+
         }
       }).then(data => {
            this.getPost() ;

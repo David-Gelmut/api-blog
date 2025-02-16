@@ -1,17 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Archiv;
 
-use App\Http\Requests\Admin\PostFormRequest;
-use App\Http\Requests\CommentRequest;
-use App\Models\Post;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
+use App\Http\Controllers\Controller;
 
 class PostController extends Controller
 {
-    public function index(): View
+   /* public function index(): View
     {
         $posts = Post::query()
             ->orderBy('created_at', 'DESC')
@@ -32,7 +27,7 @@ class PostController extends Controller
         return redirect(route('posts.show', $id));
     }
 
-    public function create()
+    public function create():View
     {
         return view('posts.create');
     }
@@ -46,8 +41,6 @@ class PostController extends Controller
         }
         $data['user_id'] = auth()->user()->id;
         $post = Post::create($data);
-
         return redirect(route('posts.index'));
-
-    }
+    }*/
 }

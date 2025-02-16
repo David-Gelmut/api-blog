@@ -1,19 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Archiv;
 
-use App\Http\Requests\ForgotRequest;
-use App\Mail\ForgotPasswordMailer;
-use App\Models\User;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\View\View;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
-    public function showLoginForm(): View
+  /*  public function showLoginForm(): View
     {
         return view('auth.login');
     }
@@ -79,5 +72,5 @@ class AuthController extends Controller
         $user->save();
         Mail::to($user)->send(new ForgotPasswordMailer($password));
         return redirect(route('home'));
-    }
+    }*/
 }

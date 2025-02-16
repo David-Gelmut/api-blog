@@ -71,7 +71,6 @@ export default {
         }
       }).then(
           res =>{
-            //  console.log(res.data.categories);
             this.categories = res.data.categories;
           }
       )

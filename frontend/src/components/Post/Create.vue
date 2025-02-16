@@ -65,11 +65,9 @@ export default {
         headers :{
           withCredentials: true,
           'X-XSRF-TOKEN':this.cookies.get("XSRF-TOKEN")
-        //  'Authorization':'Bearer '+localStorage.getItem('my_token')
         }
       }).then(
           res =>{
-          //  console.log(res.data.categories);
             this.categories = res.data.categories;
           }
       )
@@ -82,13 +80,12 @@ export default {
       formData.append('category_id', this.category_id);
       if (this.prev_image)
         formData.append('prev_image', this.prev_image);
-      //console.log(formData)
+
       axios.post('http://localhost:8080/api/posts',
           formData,
           {
             withCredentials: true,
             headers: {
-             // 'Authorization':'Bearer '+localStorage.getItem('my_token')
               'X-XSRF-TOKEN': this.cookies.get("XSRF-TOKEN")
             }
           }

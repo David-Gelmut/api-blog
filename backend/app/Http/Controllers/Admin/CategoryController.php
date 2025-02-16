@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryFormRequest;
-use App\Http\Requests\Admin\PostFormRequest;
 use App\Models\Category;
-use App\Models\Post;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
@@ -16,7 +13,7 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         $categories = Category::all();
         return view('admin.categories.index', compact('categories'));
@@ -25,7 +22,7 @@ class CategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         return view('admin.categories.create');
     }
@@ -33,12 +30,10 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CategoryFormRequest $request)
+    public function store(CategoryFormRequest $request): RedirectResponse
     {
         $data = $request->validated();
-
         $category = Category::create($data);
-
         return redirect(route('admin.categories.index'));
     }
 
@@ -61,7 +56,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CategoryFormRequest $request, Category $category)
+    public function update(CategoryFormRequest $request, Category $category): RedirectResponse
     {
         $data = $request->validated();
         $category->update($data);
@@ -71,7 +66,7 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category): RedirectResponse
     {
         $category->delete();
         return redirect(route('admin.categories.index'));

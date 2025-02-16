@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Archiv;
 
-use App\Models\Post;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
+use App\Http\Controllers\Controller;
 
 class IndexController extends Controller
 {
-    public function index():View
+  /*  public function index():View
     {
         $posts = Post::query()->orderBy('created_at', 'DESC')->limit(3)->get();
-
         return view('index', compact('posts'));
-    }
+    }*/
 }

@@ -58,11 +58,7 @@ export default {
     }
   },
   mounted() {
-   // this.getCategories();
     this.getPosts();
-  //  this.getStatus();
-
-   // this.getUsers();
   },
   methods: {
 
@@ -81,7 +77,7 @@ export default {
           //  this.next = data.data.test.next_page_url;
           })
 
-    },
+    }/*,
     getPostsNext() {
 
       axios.get(this.next, {
@@ -106,7 +102,7 @@ export default {
         this.posts = data.data.posts
       })
 
-    },
+    }*/,
   },
 }
 </script>

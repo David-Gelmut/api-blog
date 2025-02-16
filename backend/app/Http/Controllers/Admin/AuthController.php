@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\LoginRequest;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -19,13 +19,9 @@ class AuthController extends Controller
         return view('admin.auth.login');
     }
 
-    public function login_process(Request $request): RedirectResponse
+    public function login_process(LoginRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'email' => ['required', 'email', 'string'],
-            'password' => ['required']
-        ]);
-
+        $data = $request->validated();
         if (auth()->attempt($data)) {
             return redirect(route('admin.posts.index'));
         }

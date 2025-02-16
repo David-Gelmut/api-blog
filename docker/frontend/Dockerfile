@@ -1,6 +1,12 @@
-FROM node:lts-alpine
+FROM node:20.16.0
 
-WORKDIR /var/www/frontend
+ENV APP_ROOT /var/www/frontend
 
-CMD ["npm install && npm start"]
+WORKDIR ${APP_ROOT}
+ADD . ${APP_ROOT}
+
+RUN npm install
+
+RUN npm run build
+CMD npm run dev
 

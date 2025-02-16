@@ -59,9 +59,9 @@ class AuthController extends Controller
 
     public function forgot(ForgotRequest $request): JsonResponse
     {
-        $password = uniqid();
         $data = $request->validated();
         $user = User::query()->where('email', $data['email'])->first();
+        $password = uniqid();
         $user->password = bcrypt($password);
         $user->save();
         Mail::to($user)->send(new ForgotPasswordMailer($password));

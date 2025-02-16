@@ -12,11 +12,11 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index():JsonResponse
+    public function index(): JsonResponse
     {
         $users = User::all();
         return response()->json([
-            'users'=>  UserResource::collection($users)
+            'users' => UserResource::collection($users)
         ]);
     }
 }

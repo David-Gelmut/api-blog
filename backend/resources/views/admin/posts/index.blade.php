@@ -89,5 +89,5 @@
             </div>
         </div>
     </div>
-    {{$posts ->links()}}
+    {{--{{$posts ->links()}}--}}
 @endsection

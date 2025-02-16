@@ -12,7 +12,7 @@
             <a href="{{route('logout')}}" class="text-md no-underline text-grey-darker hover:text-blue-dark ml-2 px-1">Выйти</a>
         @endauth
         @guest('web')
-            <a href="{{route('login')}}" class="text-md no-underline text-grey-darker hover:text-blue-dark ml-2 px-1">Войти</a>
+            <a href="{{route('login')}}" class="text-md no-underline text-grey-darker hover:text-blue-dark ml-2 px-1">Войти1</a>
         @endguest
     </div>
 </nav>

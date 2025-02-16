@@ -20,40 +20,36 @@ use SebastianBergmann\CodeCoverage\Util\Percentage;
 
 class CommentController extends Controller
 {
-    public function index($post_id)
+    public function index($post_id): JsonResponse
     {
         $comments = Comment::query()
-            ->where('post_id',$post_id)
-            ->join('users','comments.user_id','=','users.id')
-            ->select(['comments.created_at','comments.text','comments.post_id','users.name'])
+            ->where('post_id', $post_id)
+            ->join('users', 'comments.user_id', '=', 'users.id')
+            ->select(['comments.created_at', 'comments.text', 'comments.post_id', 'users.name'])
             ->orderBy('created_at', 'DESC')
             ->get();
-        return //$comments;
+        return
             response()->json([
-            'comments'=>  CommentResource::collection( $comments)
-                //'comments'=>  $comments
+                'comments' => CommentResource::collection($comments)
+
             ]);
     }
 
-    public function store($post_id, CommentRequest $request)//:JsonResponse
+    public function store($post_id, CommentRequest $request):JsonResponse
     {
         $user_id = auth()->user()->id;
-        if(auth()->user()->role == 3){
+        if (auth()->user()->role == 3) {
             return response()->json([
                 'message' => 'Вы не можете оставлять комментарии'
             ]);
         }
 
         $data = $request->validated();
-        $data['user_id'] =  $user_id;
+        $data['user_id'] = $user_id;
         $post = Post::query()->findOrFail($post_id);
         $comment = $post->comments()->create($data);
-      //  $comment->user_id = $user_id ;
         return response()->json([
-          //  'user_id'=>$user_id,
-          //  'post_id'=>$post_id,
-            'comment'=> new CommentResource($comment),
-          //  'test'=>
+            'comment' => new CommentResource($comment),
         ]);
     }
 
